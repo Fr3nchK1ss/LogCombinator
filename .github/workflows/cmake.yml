@@ -32,7 +32,7 @@ jobs:
         #install-deps: 'true'
         #modules: 'qtcharts qtwebengine'
         #cached: 'false'
-        #setup-python: 'true'
+        setup-python: 'false'
         #tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
         #set-env: 'false'
         #tools-only: 'false'
