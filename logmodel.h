@@ -2,6 +2,7 @@
 #define LOGMODEL_H
 
 #include <QAbstractListModel>
+#include <vector>
 
 
 /**
@@ -15,6 +16,12 @@ class LogModel : public QAbstractListModel
     Q_OBJECT
 
 public:
+    enum LogRoles {
+        TimestampRole = Qt::UserRole,
+        FilenameRole,
+        MsgRole
+    };
+
     explicit LogModel(QObject *parent = nullptr);
 
     // Basic functionality:
@@ -22,7 +29,14 @@ public:
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    void insertLogLine(QStringList line);
+
+protected:
+    QHash<int, QByteArray> roleNames() const override;
+
 private:
+    std::vector<QStringList> m_logLines;
+
 };
 
 #endif // LOGMODEL_H
