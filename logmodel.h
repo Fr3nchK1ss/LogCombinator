@@ -9,35 +9,29 @@
 /**
  * @brief The LogModel class
  *
- * The model data is lines from log files
+ * The model data is composed of the lines from the different log files
  * The lines must start with an ISO timestamp formatted like yyyy-mm-ddThh:mm:ss[.mmm]
  */
 class LogModel : public QAbstractListModel
 {
     Q_OBJECT
 
-public:
     enum LogRoles {
-        TimestampRole = Qt::UserRole,
-        FilenameRole,
-        MsgRole
+        Timestamp = Qt::UserRole,
+        Filename,
+        Msg
     };
+    std::vector<QStringList> m_logLines;
 
-    explicit LogModel(QObject *parent = nullptr);
+public:
+    LogModel(QObject *parent = nullptr): QAbstractListModel(parent){}
 
-    // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QHash<int, QByteArray> roleNames() const override;
 
     void insertLogLine(QStringList line);
     void writeOut(QTextStream& out) const;
-
-protected:
-    QHash<int, QByteArray> roleNames() const override;
-
-private:
-    std::vector<QStringList> m_logLines;
 
 };
 

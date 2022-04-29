@@ -3,7 +3,7 @@ import QtQuick.Controls
 
 
 Button {
-    hoverEnabled: false // disable because of MS Windows bug
+    hoverEnabled: false // disable because of Qt / MS Windows bug, as of 6.3
 
     contentItem: Text {
         text: "Combine"

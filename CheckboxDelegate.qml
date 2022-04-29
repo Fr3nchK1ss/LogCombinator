@@ -1,16 +1,19 @@
 import QtQuick 2.0
 import QtQuick.Controls
 
-// https://doc.qt.io/qt-6/qtquickcontrols2-customize.html#customizing-checkdelegate
 
+/**
+ * https://doc.qt.io/qt-6/qtquickcontrols2-customize.html#customizing-checkdelegate
+ */
 Item {
     height: 20
     width: 200
     property alias checkText : checkDelegate.text
 
-    signal newCheckedFile(string logFile)
+    signal toggled(string logFilePath, bool isChecked);
 
-    CheckDelegate {
+    CheckDelegate
+    {
         anchors.fill: parent
         id: checkDelegate
 
@@ -20,8 +23,7 @@ Item {
         }
 
         onToggled: {
-            logController.registerLogFile(filePath, checked);
+            parent.toggled(filePath, checked);
         }
-
     }
 }

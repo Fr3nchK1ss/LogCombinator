@@ -8,7 +8,6 @@ Window {
     minimumHeight: 400
     title: "Log Combinator"
 
-
     ListView {
         width: 200
         height: 20 * logFolderModel.count
@@ -19,37 +18,27 @@ Window {
 
         spacing: 10
 
+        // FolderListModel QML properties list:
+        // fileName,filePath,fileUrl,fileBaseName,fileSuffix,fileSize,fileModified,fileAccessed,fileIsDir
         model: FolderListModel {
             id: logFolderModel
             showDirs: false
-            folder: "file:"+logDir
+            folder: "file:../LogCombinator"
             nameFilters: ["*.log"]
         }
-
-        //            FolderListModel QML properties list
-        //            ------------------------------------
-        //            fileName
-        //            filePath
-        //            fileURL (since Qt 5.2; deprecated since Qt 5.15)
-        //            fileUrl (since Qt 5.15)
-        //            fileBaseName
-        //            fileSuffix
-        //            fileSize
-        //            fileModified
-        //            fileAccessed
-        //            fileIsDir
 
         delegate: CheckboxDelegate {
             id: logCheckboxDelegate
             checkText: fileName
 
-            Component.onCompleted: {
-                // console.log(logCheckboxDelegate.height);
-            }
+            onToggled: (logFilePath, isChecked) => logController.registerLogFile(logFilePath, isChecked);
+
+            // Component.onCompleted: {
+            //    console.log(logCheckboxDelegate.height);
+            // }
         }
 
     }
-
 
     CombineButton {
         id: combineButton

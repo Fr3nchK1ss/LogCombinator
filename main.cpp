@@ -18,13 +18,9 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
 
-    const QString logDirPath = "../LogCombinator";
-    engine.rootContext()->setContextProperty("logDir", logDirPath);
-
     LogController logController;
     engine.rootContext()->setContextProperty("logController", &logController);
 
     engine.load(url);
-
     return app.exec();
 }

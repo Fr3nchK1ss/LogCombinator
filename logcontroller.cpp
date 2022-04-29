@@ -1,6 +1,5 @@
 #include <QFile>
 #include <QFileInfo>
-#include <QRegularExpression>
 #include <QTextStream>
 
 #include "logcontroller.h"
@@ -50,16 +49,11 @@ void LogController::populateModel(LogModel& model)
 
 
         QTextStream in(&logFile);
-        // rxLogLine matches following entries
-        //   (YYYY-MM-DDT)(HH::MM::ss.mmmnnn)(message)
-        //   ()(HH::MM::ss.mmmnnn)(message)
-        const QRegularExpression rxLogLine("(^.{0,10}T{0,1})(\\d{2}:\\d{2}:\\d{2}\\.\\d{6})(.*)");
-
         while ( !in.atEnd() )
         {
             const QString line = in.readLine();
 
-            QRegularExpressionMatch match = rxLogLine.match(line);
+            QRegularExpressionMatch match = m_rxLogLine.match(line);
             if (match.hasMatch())
             {
                 const QString timestamp = match.captured(2);
@@ -76,7 +70,7 @@ void LogController::populateModel(LogModel& model)
                         continue;
                     */
 
-                    model.insertLogLine( { timestamp, " [" + baseLogName.leftJustified(12, ' ', true) + "] ", logMessage });
+                    model.insertLogLine( { timestamp, " [" + baseLogName.leftJustified(10, ' ', true) + "] ", logMessage });
                 }
             }
         }

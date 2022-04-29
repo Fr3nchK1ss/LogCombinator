@@ -1,9 +1,5 @@
 #include "logmodel.h"
 
-LogModel::LogModel(QObject *parent)
-    : QAbstractListModel(parent)
-{
-}
 
 /**
  * @brief Override
@@ -11,9 +7,9 @@ LogModel::LogModel(QObject *parent)
 QHash<int, QByteArray> LogModel::roleNames() const
 {
     QHash<int, QByteArray> mapping {
-        {TimestampRole, "timestamp"},
-        {FilenameRole, "file"},
-        {MsgRole, "msg"}
+        {Timestamp, "timestamp"},
+        {Filename, "file"},
+        {Msg, "msg"}
     };
 
     return mapping;
@@ -36,6 +32,7 @@ int LogModel::rowCount(const QModelIndex &parent) const
 
 /**
  * @brief Override
+ *
  */
 QVariant LogModel::data(const QModelIndex &index, int role) const
 {
@@ -44,15 +41,14 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
 
     int row = index.row();
 
-    if (role == TimestampRole)
+    if (role == Timestamp)
         return m_logLines[row].at(0); // stringlist.at(0)
 
-    else if (role == FilenameRole)
+    else if (role == Filename)
             return m_logLines[row].at(1);
 
-    else if (role == MsgRole)
+    else if (role == Msg)
             return m_logLines[row].at(2);
-
 
     qDebug() << "Error: no valid role";
     return QVariant();
@@ -61,8 +57,8 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
 
 /**
  * @brief The data insertion func for LogModel
- * @param line has the following template:
- *        { timestamp, filename, logmessage }
+ * @param line follows the following template { timestamp, filename, logmessage }
+ *
  */
 void LogModel::insertLogLine(QStringList line)
 {
@@ -77,15 +73,15 @@ void LogModel::insertLogLine(QStringList line)
 
 /**
  * @brief LogModel::writeOutModel
- * @param out
+ *
  */
 void LogModel::writeOut(QTextStream &out) const
 {
     for (int i = 0; i < rowCount(); ++i)
     {
-        out << data(index(i), LogModel::TimestampRole).toString()
-            << data(index(i), LogModel::FilenameRole).toString()
-            << data(index(i), LogModel::MsgRole).toString()
+        out << data(index(i), LogModel::Timestamp).toString()
+            << data(index(i), LogModel::Filename).toString()
+            << data(index(i), LogModel::Msg).toString()
             << "\n";
     }
 }
