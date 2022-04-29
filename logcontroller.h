@@ -15,8 +15,10 @@ class LogController : public QObject
 {
     Q_OBJECT
 
+    QString m_compoundedLogPath = "compounded.log";
     QStringList m_filesToCombine;
     void populateModel(LogModel &model);
+    void writeCompoundedLog(const LogModel& logModel);
 
 public slots:
     void registerLogFile(QString logFile, bool isChecked);

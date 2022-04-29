@@ -9,21 +9,10 @@ Window {
     title: "Log Combinator"
 
 
-    //    Rectangle {
-    //        id: filesView
-    //        anchors.fill: parent
-
-    //        gradient: Gradient {
-    //            GradientStop { position: 0.0; color: "#808080" }
-    //            GradientStop { position: 0.33; color: "#606060" }
-    //            GradientStop { position: 1.0; color: "#343434" }
-    //        }
-    //    }
-
-
     ListView {
         width: 200
         height: 20 * logFolderModel.count
+        anchors.top: mainWindow.contentItem.top
         anchors.topMargin: 20
         anchors.horizontalCenter: mainWindow.contentItem.horizontalCenter
         interactive: false
@@ -38,7 +27,7 @@ Window {
         }
 
         //            FolderListModel QML properties list
-
+        //            ------------------------------------
         //            fileName
         //            filePath
         //            fileURL (since Qt 5.2; deprecated since Qt 5.15)
@@ -61,9 +50,10 @@ Window {
 
     }
 
+
     CombineButton {
         id: combineButton
-        anchors.bottom: parent.bottom
+        anchors.bottom: mainWindow.contentItem.bottom
         anchors.bottomMargin: 20
         anchors.horizontalCenter: mainWindow.contentItem.horizontalCenter
 

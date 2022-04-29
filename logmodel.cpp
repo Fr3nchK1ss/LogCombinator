@@ -73,3 +73,19 @@ void LogModel::insertLogLine(QStringList line)
     endInsertRows();
 
 }
+
+
+/**
+ * @brief LogModel::writeOutModel
+ * @param out
+ */
+void LogModel::writeOut(QTextStream &out) const
+{
+    for (int i = 0; i < rowCount(); ++i)
+    {
+        out << data(index(i), LogModel::TimestampRole).toString()
+            << data(index(i), LogModel::FilenameRole).toString()
+            << data(index(i), LogModel::MsgRole).toString()
+            << "\n";
+    }
+}

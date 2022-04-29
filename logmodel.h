@@ -2,6 +2,7 @@
 #define LOGMODEL_H
 
 #include <QAbstractListModel>
+#include <QTextStream>
 #include <vector>
 
 
@@ -30,6 +31,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     void insertLogLine(QStringList line);
+    void writeOut(QTextStream& out) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const override;

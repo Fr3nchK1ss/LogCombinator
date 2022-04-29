@@ -1,7 +1,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QRegularExpression>
-
+#include <QTextStream>
 
 #include "logcontroller.h"
 
@@ -26,9 +26,7 @@ void LogController::combineFiles()
     LogModel logModel;
 
     populateModel(logModel);
-
-    qDebug() << "first log message is " << logModel.data(logModel.index(0), LogModel::MsgRole).toString();
-
+    writeCompoundedLog(logModel);
 }
 
 
@@ -78,10 +76,36 @@ void LogController::populateModel(LogModel& model)
                         continue;
                     */
 
-                    model.insertLogLine(
-                        { timestamp, " [" + baseLogName.leftJustified(12, ' ', true) + "] ", logMessage });
+                    model.insertLogLine( { timestamp, " [" + baseLogName.leftJustified(12, ' ', true) + "] ", logMessage });
                 }
             }
         }
+    }
+}
+
+
+/**
+ * @brief LogController::writeCompoundedLog
+ * @param logModel
+ *
+ * Write a new log file which contains the log lines from all the combined file,
+ * ordered by timestamp
+ */
+void LogController::writeCompoundedLog(const LogModel &logModel)
+{
+    QFile compoundedLog(m_compoundedLogPath);
+    if ( compoundedLog.open(QIODevice::ReadWrite) )
+    {
+        QTextStream out(&compoundedLog);
+
+        // Header
+        QString decoration1{150, '='};
+        out << decoration1 << "\n";
+        out << "Compounding logs: ";
+        out << m_filesToCombine.join(" + ") << "\n\n";
+        out << decoration1 << "\n";
+
+        logModel.writeOut(out);
+
     }
 }
