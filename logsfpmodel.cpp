@@ -29,7 +29,7 @@ void LogSFPModel::writeCompoundedLog(QStringList filesToCombine, QString compoun
         QTextStream out(&compoundedLog);
 
         // Header
-        QString decoration1{150, '='};
+        QString decoration1{100,'-'};
         out << decoration1 << "\n";
         out << "Compounding logs: ";
         out << filesToCombine.join(" + ") << "\n\n";
