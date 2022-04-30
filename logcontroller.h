@@ -17,14 +17,12 @@ class LogController : public QObject
     Q_OBJECT
 
     // rxLogLine matches following entries
-    //   (YYYY-MM-DDT)(HH::MM::ss.mmmnnn)(message)
-    //   ()(HH::MM::ss.mmmnnn)(message)
-    static const inline QRegularExpression m_rxLogLine{"(^.{0,10}T{0,1})(\\d{2}:\\d{2}:\\d{2}\\.\\d{6})(.*)"};
+    //   (YYYY-MM-DDTHH::MM::ss.mmmnnn)(message)
+    static const inline QRegularExpression m_rxLogLine{"(^.{0,10}T{0,1}\\d{2}:\\d{2}:\\d{2}\\.\\d{6})(.*)"};
     static const inline QString m_compoundedLogPath{"compounded.log"};
 
     QStringList m_filesToCombine;
     void populateModel(LogModel &model);
-    void writeCompoundedLog(const LogModel& logModel);
 
 public slots:
     void registerLogFile(QString logFile, bool isChecked);

@@ -1,8 +1,13 @@
+#include <QDateTime>
+#include <QDesktopServices>
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QTextStream>
+#include <QUrl>
 
 #include "logcontroller.h"
+#include "logsfpmodel.h"
 
 
 void LogController::registerLogFile(QString logFile, bool isChecked)
@@ -23,9 +28,15 @@ void LogController::registerLogFile(QString logFile, bool isChecked)
 void LogController::combineFiles()
 {
     LogModel logModel;
+    LogSFPModel sfpModel;
 
     populateModel(logModel);
-    writeCompoundedLog(logModel);
+    sfpModel.setSourceModel(&logModel);
+    sfpModel.sort(0);
+    sfpModel.writeCompoundedLog(m_filesToCombine, m_compoundedLogPath);
+
+    //writeCompoundedLog(logModel);
+    qDebug() << QDesktopServices::openUrl(QUrl::fromLocalFile(QDir::currentPath()+"/"+"compounded.log"));
 }
 
 
@@ -53,13 +64,22 @@ void LogController::populateModel(LogModel& model)
         {
             const QString line = in.readLine();
 
+            // Filter out lines which should not be in the model at the first place. The purpose
+            // is different from LogSFPModel, where we may want subsets of valid log lines
             QRegularExpressionMatch match = m_rxLogLine.match(line);
             if (match.hasMatch())
             {
-                const QString timestamp = match.captured(2);
-                const QString logMessage = match.captured(3);
+                const QString timestamp = match.captured(1);
+                const QString logMessage = match.captured(2);
 
-                if ( ! (timestamp.isEmpty() || logMessage.isEmpty()) ) // discard non-timestamped & blank lines
+                const auto ISOTimestamp = QDateTime::fromString(timestamp, Qt::ISODateWithMs);
+                if ( timestamp.isEmpty() || !ISOTimestamp.isValid()) // discard non-timestamped non-ISO lines
+                {
+                    qDebug() << "Invalid ISO timestamp: " << timestamp;
+                    continue;
+                }
+
+                if ( !logMessage.isEmpty() )// discard blank lines
                 {
                     /*
                     // Filter out some log messages if need, which are in a 'filters' stringlist
@@ -77,29 +97,3 @@ void LogController::populateModel(LogModel& model)
     }
 }
 
-
-/**
- * @brief LogController::writeCompoundedLog
- * @param logModel
- *
- * Write a new log file which contains the log lines from all the combined file,
- * ordered by timestamp
- */
-void LogController::writeCompoundedLog(const LogModel &logModel)
-{
-    QFile compoundedLog(m_compoundedLogPath);
-    if ( compoundedLog.open(QIODevice::ReadWrite) )
-    {
-        QTextStream out(&compoundedLog);
-
-        // Header
-        QString decoration1{150, '='};
-        out << decoration1 << "\n";
-        out << "Compounding logs: ";
-        out << m_filesToCombine.join(" + ") << "\n\n";
-        out << decoration1 << "\n";
-
-        logModel.writeOut(out);
-
-    }
-}

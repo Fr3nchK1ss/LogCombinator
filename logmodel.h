@@ -15,15 +15,15 @@
 class LogModel : public QAbstractListModel
 {
     Q_OBJECT
+    std::vector<QStringList> m_logLines;
 
+public:
     enum LogRoles {
         Timestamp = Qt::UserRole,
         Filename,
         Msg
     };
-    std::vector<QStringList> m_logLines;
 
-public:
     LogModel(QObject *parent = nullptr): QAbstractListModel(parent){}
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

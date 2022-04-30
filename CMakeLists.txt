@@ -12,6 +12,7 @@ qt_add_executable(appLogCombinator
     main.cpp
     logmodel.h logmodel.cpp
     logcontroller.h logcontroller.cpp
+    logsfpmodel.h logsfpmodel.cpp
 )
 
 qt_add_qml_module(appLogCombinator

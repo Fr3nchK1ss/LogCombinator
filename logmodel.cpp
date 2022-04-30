@@ -1,3 +1,5 @@
+#include <QDateTime>
+
 #include "logmodel.h"
 
 
@@ -42,7 +44,9 @@ QVariant LogModel::data(const QModelIndex &index, int role) const
     int row = index.row();
 
     if (role == Timestamp)
-        return m_logLines[row].at(0); // stringlist.at(0)
+        // Return data as QString and not as ISODateWithMs to keep nanosecs precision
+        // return QDateTime::fromString(m_logLines[row].at(0), Qt::ISODateWithMs);
+        return m_logLines[row].at(0);
 
     else if (role == Filename)
             return m_logLines[row].at(1);
@@ -68,20 +72,4 @@ void LogModel::insertLogLine(QStringList line)
         m_logLines.push_back(line);
     endInsertRows();
 
-}
-
-
-/**
- * @brief LogModel::writeOutModel
- *
- */
-void LogModel::writeOut(QTextStream &out) const
-{
-    for (int i = 0; i < rowCount(); ++i)
-    {
-        out << data(index(i), LogModel::Timestamp).toString()
-            << data(index(i), LogModel::Filename).toString()
-            << data(index(i), LogModel::Msg).toString()
-            << "\n";
-    }
 }
