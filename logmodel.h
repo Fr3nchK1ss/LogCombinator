@@ -1,7 +1,7 @@
-#ifndef LOGMODEL_H
-#define LOGMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
+#include <QRegularExpressionMatch>
 #include <QTextStream>
 #include <vector>
 
@@ -17,6 +17,12 @@ class LogModel : public QAbstractListModel
     Q_OBJECT
     std::vector<QStringList> m_logLines;
 
+    // rxLogLine matches following entries
+    //   (YYYY-MM-DDTHH::MM::ss.mmmnnn)(message)
+    static const inline QRegularExpression m_rxLogLine{"(^.{0,10}T{0,1}\\d{2}:\\d{2}:\\d{2}\\.\\d{6})(.*)"};
+
+    void insertLogLine(const QStringList line);
+
 public:
     enum LogRoles {
         Timestamp = Qt::UserRole,
@@ -30,9 +36,5 @@ public:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    void insertLogLine(QStringList line);
-    void writeOut(QTextStream& out) const;
-
+    void populate(const QStringList& filesToCombine);
 };
-
-#endif // LOGMODEL_H

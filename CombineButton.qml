@@ -1,23 +1,21 @@
 import QtQuick 2.0
 import QtQuick.Controls
 
-
 Button {
-    hoverEnabled: false // disable because of Qt / MS Windows bug, as of 6.3
-
     contentItem: Text {
         text: "Combine"
+        color: "green"
         font.pixelSize: 26
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
 
     background: Rectangle {
-        color: combineButton.down ? "purple" : "mediumpurple"
-        radius: 15
+        id: backgroundRect
         border.width: 0
-        implicitHeight: 50
+        implicitHeight: 80
         implicitWidth: 200
     }
 
 }
+

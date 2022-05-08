@@ -19,7 +19,8 @@ Item {
 
         background: Rectangle {
             anchors.fill: parent
-            color: "transparent"
+            color: "white"
+            opacity: 0.7
         }
 
         onToggled: {

@@ -8,6 +8,15 @@ Window {
     minimumHeight: 400
     title: "Log Combinator"
 
+
+    // Eye candy background which is reset() for user feedback
+    ParticlesRain {
+        id: rain
+        anchors.fill: parent
+    }
+
+
+    // Checklist of .log files which can be combined
     ListView {
         width: 200
         height: 20 * logFolderModel.count
@@ -31,33 +40,49 @@ Window {
             id: logCheckboxDelegate
             checkText: fileName
 
+            // Register files to be combined on c++ side
             onToggled: (logFilePath, isChecked) => logController.registerLogFile(logFilePath, isChecked);
-
-            // Component.onCompleted: {
-            //    console.log(logCheckboxDelegate.height);
-            // }
         }
 
     }
+
 
     CombineButton {
         id: combineButton
         anchors.bottom: mainWindow.contentItem.bottom
-        anchors.bottomMargin: 20
         anchors.horizontalCenter: mainWindow.contentItem.horizontalCenter
+        width: parent.width
 
         Component.onCompleted: {
-            // Force the recalculation of mainWindow geometry after adding
-            // ListView and CombineButton because of a display bug
-            mainWindow.showMinimized();
+            // mainWindow.showMinimized(); // May be necessary on Windows OS
             mainWindow.showNormal();
         }
 
+        // without FX
+        // onClicked: {  logController.combineFiles(); // c++ call }
+
+        // with FX
+        // * the particle system is reset
+        // * the button turns white on green
         onClicked: {
-            logController.combineFiles();
+            rain.reset()
+            contentItem.color = "white"
+            background.color = "green"
+            delayTimer.start()
         }
+
+        Timer {
+            id: delayTimer
+            interval: 100;
+            running: false;
+            repeat: false
+            onTriggered: {
+                logController.combineFiles(); // c++ call
+                combineButton.contentItem.color = "green"
+                combineButton.background.color = "white"
+            }
+        }
+        // end FX
     }
-
-
 
 }

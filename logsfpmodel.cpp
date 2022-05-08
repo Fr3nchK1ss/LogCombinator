@@ -19,28 +19,30 @@ LogSFPModel::LogSFPModel(QObject *parent)
  * @param compoundedLogPath: output path, defined in the logController
  *
  * Write a new log file which contains the logs from all the user selected files,
- * ordered by timestamp
+ * ordered by descending timestamp
  */
-void LogSFPModel::writeCompoundedLog(QStringList filesToCombine, QString compoundedLogPath)
+void LogSFPModel::writeCompoundedLog(const QStringList& filesToCombine, const QString& compoundedLogPath)
 {
-    QFile compoundedLog(compoundedLogPath);
-    if ( compoundedLog.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text) )
+    sort(0, Qt::DescendingOrder);
+
+    if (QFile compoundedLog(compoundedLogPath); compoundedLog.open(QIODevice::ReadWrite | QIODevice::Truncate | QIODevice::Text) )
     {
         QTextStream out(&compoundedLog);
 
         // Header
         QString decoration1{100,'-'};
-        out << decoration1 << "\n";
-        out << "Compounding logs: ";
-        out << filesToCombine.join(" + ") << "\n\n";
-        out << decoration1 << "\n";
+        out << decoration1 << Qt::endl
+            << "Compounding logs: " << filesToCombine.join(" + ") << Qt::endl
+            << Qt::endl
+            << decoration1 << Qt::endl;
 
+        // Log lines
         for (int i = 0; i < rowCount(); ++i)
         {
             out << data(index(i,0), LogModel::Timestamp).toString() // Not as QDateTime to have nanosec precision
                 << data(index(i,0), LogModel::Filename).toString()
                 << data(index(i,0), LogModel::Msg).toString()
-                << "\n";
+                << Qt::endl;
         }
 
     }

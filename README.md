@@ -2,6 +2,8 @@
 Given log files selected through the QML UI, LogCombinator creates one single log file where lines are ordered according to their timestamps.  
 Uses the infamous FolderListModel (still a badly documented Qt.labs feature at time of coding)
 
+![Screenshot](https://raw.githubusercontent.com/Fr3nchK1ss/LogCombinator/master/screenshot.png)
+
 ## Build
 Open the CMakeLists.txt with QtCreator, then follow the normal Qt build flow.
 

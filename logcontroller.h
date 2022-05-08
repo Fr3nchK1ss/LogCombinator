@@ -1,5 +1,4 @@
-#ifndef LOGCONTROLLER_H
-#define LOGCONTROLLER_H
+#pragma once
 
 #include <QObject>
 #include <QRegularExpression>
@@ -10,25 +9,16 @@
 /**
  * @brief The LogController class
  *
- * The LogController bridges between the QML UI and the log model
+ * The LogController is the bridge between the QML UI and the logmodel
  */
 class LogController : public QObject
 {
     Q_OBJECT
-
-    // rxLogLine matches following entries
-    //   (YYYY-MM-DDTHH::MM::ss.mmmnnn)(message)
-    static const inline QRegularExpression m_rxLogLine{"(^.{0,10}T{0,1}\\d{2}:\\d{2}:\\d{2}\\.\\d{6})(.*)"};
     static const inline QString m_compoundedLogPath{"compounded.log"};
-
     QStringList m_filesToCombine;
-    void populateModel(LogModel &model);
 
 public slots:
-    void registerLogFile(QString logFile, bool isChecked);
+    void registerLogFile(const QString logFile, bool isChecked);
     void combineFiles();
 
-
 };
-
-#endif // LOGCONTROLLER_H
