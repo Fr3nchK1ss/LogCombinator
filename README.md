@@ -1,4 +1,5 @@
-# LogCombinator
+# LogCombinator ![CMake](https://github.com/Fr3nchK1ss/LogCombinator/actions/workflows/cmake.yml/badge.svg)
+
 Given log files selected through the QML UI, LogCombinator creates one single log file where lines are ordered according to their timestamps.  
 Uses the infamous FolderListModel (still a badly documented Qt.labs feature at time of coding)
 
